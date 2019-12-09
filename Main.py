@@ -195,13 +195,18 @@ def command(x, y, width, height):
             slow_print("MOVE command does not have the parameter " + parameter)
 
         return x, y
-        
+    if command == "SEARCH":
+        pass
+
     
 
-menu()
+# menu()
 
 ##test_map = create_map(6, 6)
 ##populate_map(test_map, 6, 6)
+
+x, y = command(0, 1, 6, 6)
+print(x, y)
 
 slow_print("Press enter to exit")
 input("> ")
