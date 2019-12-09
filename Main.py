@@ -43,6 +43,7 @@ possessed_knight = Enemy("Possessed Knight", 1,  15, 150, 2)
 imp = Enemy("Imp", 2, 10, 100, 2)
 succubus = Enemy("Succubus", 3, 3, 96, 2)
 
+
 #function to call the menu
 def menu():
     #print a welcome message to the user
@@ -50,23 +51,23 @@ def menu():
     slow_print("I hope you enjoy your stay.\n")
     #show a little graphic to spruce up the menu(I am not very good at ascii art so I chose something simple)
     slow_print("""
-         /\ 
-        /  \ 
+         /\
+        /  \
        |    |
        |    |
        |    |
        |    |
- ___|    |___
-|___      ___| 
+    ___|    |___
+   |___      ___|
        |    |
-       |__| """)
+       |____| """)
     #print out the players options
     slow_print("""
     Play
     Scores
     Quit
     """)
-    
+
     #get an input from player to make a choice
     choice = input("> ")
     #if they chose an item off the menu then it sends them to the related function, else it reprints the menu with a message
@@ -141,7 +142,7 @@ def create_map(width, height):
         for j in range(width):
             temp.append("")
         level.append(temp)
-    
+
     return level
 
 
@@ -153,7 +154,7 @@ def populate_map(level, width, height):
     num2 = 0
     for i in range(width):
         num2 = 0
-        
+
         for i in range(height):
             num = randint(0, len(rooms) - 1)
             room = rooms[num]
@@ -198,7 +199,7 @@ def command(x, y, width, height):
     if command == "SEARCH":
         pass
 
-    
+
 
 # menu()
 
