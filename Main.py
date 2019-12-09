@@ -165,13 +165,6 @@ def populate_map(level, width, height):
                 level[num1][num2] = room
             num2 += 1
         num1 += 1
-        
-    
-    print("-" * ((self.width * 3) + 1))
-    for row in self.__board:
-        print("|" + "|".join() + "|")
-        print("-" * ((width* 3) + 1))
-
 
 
 
