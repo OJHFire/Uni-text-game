@@ -199,12 +199,15 @@ def command(x, y, width, height):
 
     if command == "SEARCH":
         search(current_room)
+    
+    if command in ["OBSERVE","DESC", "DESCRIPTION"]:
+        observe(current_room)
 
 
 def search(current_room):
     pass
 
-def observe():
+def observe(current_room):
     pass
 # menu()
 
