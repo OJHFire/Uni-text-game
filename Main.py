@@ -145,10 +145,6 @@ def create_map(width, height):
     return level
 
 
-
-
-
-
 def populate_map(level, width, height):
     level[0][0] = "entrance"
     level[width - 1][height - 1] = "exit"
@@ -166,7 +162,41 @@ def populate_map(level, width, height):
             num2 += 1
         num1 += 1
 
+def command(x, y, width, height):
+    user_inp = input("> ").upper()
+    command = ""
+    parameter = ""
+    space = False
+    for i in user_inp:
+        if i == " ":
+            space = True
+            continue
+        if space == False:
+            command = command + i
+        else:
+            parameter = parameter + i
 
+    if command == "MOVE":
+        if parameter in ["NORTH", "SOUTH", "EAST", "WEST"]:
+            if parameter == "NORTH":
+                if y != 0:
+                    y -= 1
+            elif parameter == "SOUTH":
+                if y != height - 1:
+                    y += 1
+            elif parameter == "EAST":
+                if x != width - 1:
+                    x += 1
+            elif parameter == "WEST":
+                if x != 0:
+                    x -= 1
+        else:
+            system('cls')
+            slow_print("MOVE command does not have the parameter " + parameter)
+
+        return x, y
+        
+    
 
 menu()
 
