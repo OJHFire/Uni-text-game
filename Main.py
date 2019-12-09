@@ -7,7 +7,7 @@ from time import sleep
 from os import system
 from random import randint
 
-
+current_room = [0][0]
 
 def slow_print(string):
     for char in string + "\n":
@@ -196,11 +196,16 @@ def command(x, y, width, height):
             slow_print("MOVE command does not have the parameter " + parameter)
 
         return x, y
+
     if command == "SEARCH":
-        pass
+        search(current_room)
 
 
+def search(current_room):
+    pass
 
+def observe():
+    pass
 # menu()
 
 ##test_map = create_map(6, 6)
