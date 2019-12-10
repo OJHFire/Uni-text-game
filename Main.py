@@ -17,7 +17,7 @@ def slow_print(string):
 #global difficulty variable
 difficulty = "Normal"
 
-rooms = ["corridor_ns", "corridor_ew", "lcorridor_ne", "lcorridor_nw", "lcorridor_se", "lcorridor_sw", "armoury", "kitchen", "torture_chamber", "dining_hall"]
+rooms = ["empty_room", "great_hall", "tomb", "corridor", "armoury", "kitchen", "torture_chamber", "dining_hall"]
 
 #define weapons using Weapon class
 fist = Weapon("Fist", 0, 1, 3, "None")
@@ -210,7 +210,12 @@ def search(current_room):
     pass
 
 def observe(current_room):
-    pass
+    if current_room == "corridor":
+        print("You find yourself in a dark wet corridor, there is just enough light from the torches held\non the wall to make it through without tripping")
+    elif current_room == "armoury":
+        print("You found yourself in an armoury.\n However its really old so there isn't much left, maybe you can find a new weapon if you search the room.")
+    elif current_room == "kitchen":
+        print("You found yourself in a kitchen")
 # menu()
 
 def get_location(x, y):
