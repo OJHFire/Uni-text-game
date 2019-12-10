@@ -136,6 +136,7 @@ def setup():
     pass
 
 def create_map(width, height):
+    global level
     level = []
     for i in range(height):
         temp = []
@@ -191,6 +192,7 @@ def command(x, y, width, height):
             elif parameter == "WEST":
                 if x != 0:
                     x -= 1
+
         else:
             system('cls')
             slow_print("MOVE command does not have the parameter " + parameter)
@@ -211,11 +213,16 @@ def observe(current_room):
     pass
 # menu()
 
-##test_map = create_map(6, 6)
-##populate_map(test_map, 6, 6)
+def get_location(x, y):
+    current_room = level[x][y]
+    return current_room
+
+test_map = create_map(6, 6)
+populate_map(test_map, 6, 6)
 
 x, y = command(0, 1, 6, 6)
-print(x, y)
+current_room = get_location(x, y)
+print(current_room)
 
 slow_print("Press enter to exit")
 input("> ")
