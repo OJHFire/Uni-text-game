@@ -6,9 +6,11 @@ from EnemiesClass import Enemy
 from time import sleep
 from os import system
 from random import randint
-
-current_room = [0][0]
-
+x = 0
+y = 0
+current_room = "None"
+width = 6
+height = 6
 def slow_print(string):
     for char in string + "\n":
         print(char, end="")
@@ -94,7 +96,7 @@ def play(difficulty):
     choice = input("> ")
     if choice.lower() == "start":
         system('cls')
-        start()
+        pre_game()
     elif choice.lower() == "difficulty":
         system('cls')
         if difficulty == "Normal":
@@ -124,30 +126,28 @@ def scores():
     system('cls')
     menu()
 
-def start():
-    observe(current_location)
-    command(x, y, width, height)
+def start(current_map, health, armour, armour_resistance, weapon):
+    finished = False
+    while finished != True:
+        system('cls')
+        observe()
+        command()
+    
+
+def pre_game():
+    new_map = create_map()
+    populate_map(new_map)
+    get_location()
     health = 100
-    stamina = 100
-    mana = 50
     armour = 0
     armour_resistance = 0
     weapon = fist
-
-def pre_game():
-    global x = 0
-    global y = 0
-    global width = 6
-    global height = 6
-    global new_map = create_map(width, height)
-    populate_map(new_map, width, height)
-    global current_location = get_location(x, y)
-    start()
+    start(new_map, health, armour, armour_resistance, weapon)
 
 def setup():
     pass
 
-def create_map(width, height):
+def create_map():
     global level
     level = []
     for i in range(height):
@@ -159,7 +159,7 @@ def create_map(width, height):
     return level
 
 
-def populate_map(level, width, height):
+def populate_map(level):
     level[0][0] = "entrance"
     level[width - 1][height - 1] = "exit"
 
@@ -176,7 +176,7 @@ def populate_map(level, width, height):
             num2 += 1
         num1 += 1
 
-def command(x, y, width, height):
+def command():
     user_inp = ""
     while user_inp == "":
         user_inp = input("> ").upper()
@@ -193,14 +193,14 @@ def command(x, y, width, height):
             parameter = parameter + i
 
     if command == "MOVE":
-        x,y = move(parameter)
+        move(parameter)
 
 
     elif command in ["SEARCH", "LOOK"]:
-        search(current_room)
+        search()
     
     elif command in ["OBSERVE","DESC", "DESCRIPTION"]:
-        observe(current_room)
+        observe()
 
 def move(parameter):
     if parameter in ["NORTH", "SOUTH", "EAST", "WEST"]:
@@ -227,13 +227,11 @@ def move(parameter):
             else:
                 system('cls')
                 slow_print("MOVE command does not have the parameter " + parameter)
-
-            return x, y
     
-def search(current_room):
+def search():
     pass
 
-def observe(current_room):
+def observe():
     if current_room == "corridor":
         slow_print("You find yourself in a dark wet corridor, there is just enough light from the torches held\non the wall to make it through without tripping")
     elif current_room == "armoury":
@@ -244,10 +242,9 @@ def observe(current_room):
         slow_print("You awake in a brightly lit room, you need to get out...")
     else:
         input("Something broke, press enter to exit: ")
-    start()
-def get_location(x, y):
+
+def get_location():
     current_room = level[x][y]
-    return current_room
 
 menu()
 
