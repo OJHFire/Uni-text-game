@@ -51,16 +51,16 @@ def menu():
     slow_print("I hope you enjoy your stay.\n")
     #show a little graphic to spruce up the menu(I am not very good at ascii art so I chose something simple)
     slow_print("""
-         /\
-        /  \
+         /\\
+        /  \\
        |    |
        |    |
        |    |
        |    |
-    ___|    |___
-   |___      ___|
+ ___|    |___
+|___      ___|
        |    |
-       |____| """)
+       |__| """)
     #print out the players options
     slow_print("""
     Play
@@ -125,12 +125,24 @@ def scores():
     menu()
 
 def start():
+    observe(current_location)
+    command(x, y, width, height)
     health = 100
     stamina = 100
     mana = 50
     armour = 0
     armour_resistance = 0
     weapon = fist
+
+def pre_game():
+    global x = 0
+    global y = 0
+    global width = 6
+    global height = 6
+    global new_map = create_map(width, height)
+    populate_map(new_map, width, height)
+    global current_location = get_location(x, y)
+    start()
 
 def setup():
     pass
@@ -165,7 +177,9 @@ def populate_map(level, width, height):
         num1 += 1
 
 def command(x, y, width, height):
-    user_inp = input("> ").upper()
+    user_inp = ""
+    while user_inp == "":
+        user_inp = input("> ").upper()
     command = ""
     parameter = ""
     space = False
@@ -179,55 +193,66 @@ def command(x, y, width, height):
             parameter = parameter + i
 
     if command == "MOVE":
-        if parameter in ["NORTH", "SOUTH", "EAST", "WEST"]:
+        x,y = move(parameter)
+
+
+    elif command in ["SEARCH", "LOOK"]:
+        search(current_room)
+    
+    elif command in ["OBSERVE","DESC", "DESCRIPTION"]:
+        observe(current_room)
+
+def move(parameter):
+    if parameter in ["NORTH", "SOUTH", "EAST", "WEST"]:
             if parameter == "NORTH":
                 if y != 0:
                     y -= 1
+                else:
+                    slow_print("You can not go that way")
             elif parameter == "SOUTH":
                 if y != height - 1:
                     y += 1
+                else:
+                    slow_print("You can not go that way")
             elif parameter == "EAST":
                 if x != width - 1:
                     x += 1
+                else:
+                    slow_print("You can not go that way")
             elif parameter == "WEST":
                 if x != 0:
                     x -= 1
+                else:
+                    slow_print("You can not go that way")
+            else:
+                system('cls')
+                slow_print("MOVE command does not have the parameter " + parameter)
 
-        else:
-            system('cls')
-            slow_print("MOVE command does not have the parameter " + parameter)
-
-        return x, y
-
-    if command == "SEARCH":
-        search(current_room)
+            return x, y
     
-    if command in ["OBSERVE","DESC", "DESCRIPTION"]:
-        observe(current_room)
-
-
 def search(current_room):
     pass
 
 def observe(current_room):
     if current_room == "corridor":
-        print("You find yourself in a dark wet corridor, there is just enough light from the torches held\non the wall to make it through without tripping")
+        slow_print("You find yourself in a dark wet corridor, there is just enough light from the torches held\non the wall to make it through without tripping")
     elif current_room == "armoury":
-        print("You found yourself in an armoury.\n However its really old so there isn't much left, maybe you can find a new weapon if you search the room.")
+        slow_print("You found yourself in an armoury.\n However its really old so there isn't much left, maybe you can find a new weapon if you search the room.")
     elif current_room == "kitchen":
-        print("You found yourself in a kitchen")
-# menu()
-
+        slow_print("You found yourself in a kitchen")
+    elif current_room == "entrance":
+        slow_print("You awake in a brightly lit room, you need to get out...")
+    else:
+        input("Something broke, press enter to exit: ")
+    start()
 def get_location(x, y):
     current_room = level[x][y]
     return current_room
 
-test_map = create_map(6, 6)
-populate_map(test_map, 6, 6)
+menu()
 
-x, y = command(0, 1, 6, 6)
-current_room = get_location(x, y)
-print(current_room)
+
+
 
 slow_print("Press enter to exit")
 input("> ")
