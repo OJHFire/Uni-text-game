@@ -16,7 +16,6 @@ def slow_print(string):
         print(char, end="")
         sleep(0.01)
 
-#global difficulty variable
 difficulty = "Normal"
 
 rooms = ["empty_room", "great_hall", "tomb", "corridor", "armoury", "kitchen", "torture_chamber", "dining_hall"]
@@ -203,6 +202,8 @@ def command():
         observe()
 
 def move(parameter):
+    global y
+    global x
     if parameter in ["NORTH", "SOUTH", "EAST", "WEST"]:
             if parameter == "NORTH":
                 if y != 0:
@@ -244,6 +245,7 @@ def observe():
         input("Something broke, press enter to exit: ")
 
 def get_location():
+    global current_room
     current_room = level[x][y]
 
 menu()
