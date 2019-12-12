@@ -9,7 +9,8 @@ class Weapon():
 
 class Armour():
 
-    def __init__(self, name, rarity, resistance, ):
+    def __init__(self, name, rarity, resistance, durability):
         self.name = name
         self.rarity = rarity
         self.resistance = resistance
+        self.durability = durability

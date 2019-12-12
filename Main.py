@@ -35,7 +35,6 @@ steel_battleaxe = Weapon("Steel Battle Axe", 3, 60, 0.5, "Steel")
 shotgun = Weapon("Shotgun?", 4, 200, 3, "Steel")
 
 
-
 #define enemy types using Enemy class
 zombie = Enemy("Zombie", 1, 3, 50, 1)
 ogre = Enemy("Ogre", 0.5, 40, 200, 3)
@@ -115,7 +114,7 @@ def play(difficulty):
         menu()
     else:
         system('cls')
-        print("INVALID COMMAND")
+        slow_print("INVALID COMMAND")
         play(difficulty)
 
 def scores():
@@ -125,11 +124,13 @@ def scores():
     system('cls')
     menu()
 
-def start(current_map, health, armour, armour_resistance, weapon):
+def start(level, health, armour, armour_resistance, weapon):
     finished = False
     while finished != True:
         system('cls')
         observe()
+        nesw = check_directions()
+        print("The available directions are: " + nesw)
         command()
     
 
@@ -156,7 +157,6 @@ def create_map():
         level.append(temp)
 
     return level
-
 
 def populate_map(level):
     level[0][0] = "entrance"
@@ -201,6 +201,10 @@ def command():
     elif command in ["OBSERVE","DESC", "DESCRIPTION"]:
         observe()
 
+    elif command in ["DIRECTIONS", "DIR"]:
+        nesw = check_directions()
+        print("The available directions are: " + nesw)
+
 def move(parameter):
     global y
     global x
@@ -244,14 +248,60 @@ def observe():
     else:
         input("Something broke, press enter to exit: ")
 
+def check_directions():
+    nesw = ""
+    if level[x][y-1] != "":
+        nesw = nesw + "North "
+    if level[x+1][y] != "":
+        nesw = nesw + "East "
+    if level[x][y+1] != "":
+        nesw = nesw + "South "
+    if level[x-1][y] != "":
+        nesw = nesw + "West"
+    
+    return nesw
+
+def attack(target, weapon):
+    num = randint(0, 10)
+    if num >= 0 and num <= 7:
+        multiplier = 1
+    else:
+        multiplier = 2
+    damage = weapon.damage * multiplier
+    target.health = target.health - damage
+    if multiplier == 2:
+        print("Critical hit!")
+
+
+
+def take_damage(health, armour, armour_resistance, enemy):
+    num = randint(0, 10)
+    if num >= 0 and num <= 7:
+        multiplier = 1
+    else:
+        multiplier = 2
+    health_damage = (enemy.damage * multiplier) / armour_resistance
+    armour_damage = (enemy.damage * multiplier) % armour_resistance
+    health -= health_damage
+    armour.durability -= armour_damage
+    if multiplier == 2:
+        print("Critical hit!")
+    if armour.durability <= 0:
+        armour.durability = 0
+        armour_resistance = 0
+        print("Your", armour.name, "broke!")
+    if health <= 0:
+        death()
+
+def block():
+
 def get_location():
     global current_room
     current_room = level[x][y]
 
+def death():
+    print("You died, sorry")
+
 menu()
-
-
-
-
 slow_print("Press enter to exit")
 input("> ")
