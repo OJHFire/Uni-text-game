@@ -10,6 +10,9 @@ from random import randint
 
 finished = False
 
+search_map = []
+
+
 premade_map1 = [
 ["entrance", "empty_room", "", "", "", ""],
 ["corridor", "", "", "", "", ""],
@@ -23,6 +26,12 @@ y = 0
 current_room = "None"
 width = 6
 height = 6
+
+def generate_search_map():
+    global search_map
+    search_map = []
+    for i in range(6):
+        search_map.append(["", "", "", "", "", ""])
 
 def slow_print(string):
     for char in string + "\n":
@@ -95,7 +104,7 @@ def menu():
         slow_print("GoodBye!")
     else:
         system('cls')
-        slow_print("INVALID COMMAND")
+        slow_print("::INVALID COMMAND:: \n")
         sleep(1)
         menu()
 
@@ -148,6 +157,7 @@ def start(level, health, armour, armour_resistance, weapon):
     
 
 def pre_game():
+    generate_search_map()
     new_map = create_map()
     populate_map(new_map)
     get_location()
