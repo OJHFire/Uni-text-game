@@ -138,13 +138,13 @@ def scores():
     menu()
 
 def start(level, health, armour, armour_resistance, weapon):
-    finished = False
     while finished != True:
         system('cls')
         observe()
         nesw = check_directions()
         print("The available directions are: " + nesw)
         command()
+        is_exit()
     
 
 def pre_game():
@@ -251,7 +251,9 @@ def search():
     pass
 
 def observe():
-    if current_room == "corridor":
+    if True:
+        print(x, y)
+    elif current_room == "corridor":
         system('cls')
         slow_print("You find yourself in a dark wet corridor, there is just enough light from the torches held\non the wall to make it through without tripping")
     elif current_room == "lcorridor":
@@ -268,21 +270,30 @@ def observe():
         slow_print("You awake in a brightly lit room, you need to get out...")
     elif current_room == "exit":
         system('cls')
-        slow_print("You found the exit! You win!")
-        finished = True
+        slow_print("You found the exit!")
+    elif current_room == "great_hall":
+        slow_print("You look around to see you're in some sort of hall, probably used for \nspeeches and such when this place was used.")
+    elif current_room == "tomb":
+        slow_print("It seems to be a tomb with a coffin in the middle, its sealed tight though,\n so don't expect anything to popout.")
+    elif current_room == "empty_room":
+        slow_print("Its a very bare looking room. There doesn't seem to be anything of interest.")
     else:
         input("Something broke, press enter to exit: ")
 
 def check_directions():
     nesw = ""
-    if y != 0 and level[x][y-1] != "":
-        nesw = nesw + "North "
-    if x != width and level[x+1][y] != "":
-        nesw = nesw + "East "
-    if y != height and level[x][y+1] != "":
-        nesw = nesw + "South "
-    if x != 0 and level[x-1][y] != "":
-        nesw = nesw + "West"
+    if y != 0:
+        if level[x][y-1] != "":
+            nesw = nesw + "North "
+    if x != width - 1:
+        if level[x+1][y] != "":
+            nesw = nesw + "East "
+    if y != height - 1: 
+        if level[x][y+1] != "":
+            nesw = nesw + "South "
+    if x != 0:
+        if level[x-1][y] != "":
+            nesw = nesw + "West"
     
     return nesw
 
@@ -318,14 +329,22 @@ def take_damage(health, armour, armour_resistance, enemy):
     if health <= 0:
         death()
 
-
+def is_exit():
+    global finished
+    if current_room == "exit":
+        system('cls')
+        observe()
+        slow_print("Well done you win!")
+        finished = True
 
 def get_location():
     global current_room
     current_room = level[x][y]
 
 def death():
+    global finished
     print("You died, sorry")
+    finished = True
 
 menu()
 slow_print("Press enter to exit")
