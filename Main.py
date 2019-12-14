@@ -1,7 +1,6 @@
 #importing all the other libraries and classes
 from ItemsClass import Weapon
 from ItemsClass import Armour
-from RoomsClass import Room
 from EnemiesClass import Enemy
 from time import sleep
 from os import system
@@ -20,6 +19,9 @@ premade_map1 = [
 ["great_hall", "", "armoury", "corridor", "empty_room", ""],
 ["lcorridor", "", "", "", "dining_hall", ""],
 ["armoury", "empty_room", "great_hall", "dining_hall", "kitchen", "exit"]]
+
+# entrance = Room("Entrance", 0, 0, 0, 0, 0, "nesw")
+# exit_room = Room("Exit", 0, 0, 0, 0, 0, "nesw")
 
 x = 0
 y = 0
@@ -157,15 +159,18 @@ def start(level, health, armour, armour_resistance, weapon):
     
 
 def pre_game():
+    global current_room
     generate_search_map()
-    new_map = create_map()
-    populate_map(new_map)
-    get_location()
+    # new_map = create_map()
+    level = premade_map1
+    current_room = level[0][0]
+    # populate_map(new_map)
+    get_location(level)
     health = 100
     armour = 0
     armour_resistance = 0
     weapon = fist
-    start(new_map, health, armour, armour_resistance, weapon)
+    start(level, health, armour, armour_resistance, weapon)
 
 def setup():
     pass
@@ -255,15 +260,13 @@ def move(parameter):
             else:
                 system('cls')
                 slow_print("MOVE command does not have the parameter " + parameter)
-            get_location()
+            get_location(level)
     
 def search():
     pass
 
 def observe():
-    if True:
-        print(x, y)
-    elif current_room == "corridor":
+    if current_room == "corridor":
         system('cls')
         slow_print("You find yourself in a dark wet corridor, there is just enough light from the torches held\non the wall to make it through without tripping")
     elif current_room == "lcorridor":
@@ -309,14 +312,19 @@ def check_directions():
 
 def attack(target, weapon):
     num = randint(0, 10)
+    num2 = randint(0, 100)
     if num >= 0 and num <= 7:
         multiplier = 1
     else:
         multiplier = 2
+    if num2 >= 80:
+        multiplier = multiplier * 2
     damage = weapon.damage * multiplier
     target.health = target.health - damage
     if multiplier == 2:
         print("Critical hit!")
+    if multiplier == 4:
+        print("Super critical hit!")
 
 
 
@@ -347,7 +355,7 @@ def is_exit():
         slow_print("Well done you win!")
         finished = True
 
-def get_location():
+def get_location(level):
     global current_room
     current_room = level[x][y]
 
