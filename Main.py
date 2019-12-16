@@ -309,7 +309,7 @@ def attack(target, weapon):
     if multiplier == 4:
         print("Super critical hit!")
 
-def populate_enemy():
+def pick_enemy():
     enemy_pool = []
     for i in range(100):
         enemy = Imp()
@@ -325,6 +325,9 @@ def populate_enemy():
         enemy = Troll()
         enemy_pool.append(enemy)
 
+    num = randint(0, len(enemy_pool))
+    
+    return enemy_pool[num]
 
 def combat_counter():
     global enemy_counter
@@ -340,7 +343,13 @@ def combat_counter():
         enemy_encounter()
 
 def enemy_encounter():
-    pass
+    current_enemy = pick_enemy()
+    done = False
+    while done != True:
+        slow_print("Enemy: " + current_enemy.name)
+        slow_print("Enemy Health: " + current_enemy.health)
+        
+        
 
 def take_damage(health, armour, armour_resistance, enemy):
     num = randint(0, 10)
