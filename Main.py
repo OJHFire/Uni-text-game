@@ -1,14 +1,13 @@
 #importing all the other libraries and classes
-from ItemsClass import Weapon
-from ItemsClass import Armour
-from EnemiesClass import Enemy
+from ItemsClass import *
+from EnemiesClass import *
 from time import sleep
 from os import system
 from random import randint
 
 
 finished = False
-
+enemy_counter = 0
 search_map = []
 
 # entrance = Room("Entrance", 0, 0, 0, 0, 0, "nesw")
@@ -28,8 +27,8 @@ def generate_search_map():
 
 def slow_print(string):
     for char in string + "\n":
-        print(char, end="")
-        sleep(0.01)
+        print(char, end="", flush=True)
+        sleep(0.000002)
 
 difficulty = "Normal"
 
@@ -50,15 +49,6 @@ steel_battleaxe = Weapon("Steel Battle Axe", 3, 60, 0.5, "Steel")
 shotgun = Weapon("Shotgun?", 4, 200, 3, "Steel")
 
 
-#define enemy types using Enemy class
-zombie = Enemy("Zombie", 1, 3, 50, 1)
-ogre = Enemy("Ogre", 0.5, 40, 200, 3)
-troll = Enemy("Troll", 0.75, 20, 150, 3)
-possessed_knight = Enemy("Possessed Knight", 1,  15, 150, 2)
-imp = Enemy("Imp", 2, 10, 100, 2)
-succubus = Enemy("Succubus", 3, 3, 96, 2)
-
-
 #function to call the menu
 def menu():
     #print a welcome message to the user
@@ -67,15 +57,15 @@ def menu():
     #show a little graphic to spruce up the menu(I am not very good at ascii art so I chose something simple)
     slow_print("""
          /\\
-        /  \\
+        /  \\  
        |    |
        |    |
        |    |
        |    |
- ___|    |___
-|___      ___|
+    ___|    |___
+   |___      ___|
        |    |
-       |__| """)
+       |____| """)
     #print out the players options
     slow_print("""
     Play
@@ -144,8 +134,9 @@ def start(level, health, armour, armour_resistance, weapon):
         system('cls')
         observe()
         nesw = check_directions()
-        print("The available directions are: " + nesw)
+        slow_print("The available directions are: " + nesw)
         command()
+        health += 1
         get_location(level)
         is_exit()
     
@@ -266,7 +257,7 @@ def observe():
         slow_print(("You find yourself in a dark wet corridor thats shaped like an L."))
     elif current_room == "armoury":
         system('cls')
-        slow_print("You found yourself in an armoury.\n However its really old so there isn't much left, maybe you can find a new weapon if you search the room.")
+        slow_print("You found yourself in an armoury.\nHowever its really old so there isn't much left, maybe you can find a new weapon if you search the room.")
     elif current_room == "kitchen":
         system('cls')
         slow_print("You found yourself in a kitchen")
@@ -279,7 +270,7 @@ def observe():
     elif current_room == "great_hall":
         slow_print("You look around to see you're in some sort of hall, probably used for \nspeeches and such when this place was used.")
     elif current_room == "tomb":
-        slow_print("It seems to be a tomb with a coffin in the middle, its sealed tight though,\n so don't expect anything to popout.")
+        slow_print("It seems to be a tomb with a coffin in the middle, its sealed tight though,\nso don't expect anything to popout.")
     elif current_room == "empty_room":
         slow_print("Its a very bare looking room. There doesn't seem to be anything of interest.")
     else:
@@ -318,7 +309,38 @@ def attack(target, weapon):
     if multiplier == 4:
         print("Super critical hit!")
 
+def populate_enemy():
+    enemy_pool = []
+    for i in range(100):
+        enemy = Imp()
+        enemy_pool.append(enemy)
+        enemy = Succubus()
+        enemy_pool.append(enemy)
+        enemy = knight()
+        enemy_pool.append(enemy)
+        enemy = Zombie()
+        enemy_pool.append(enemy)
+        enemy = Ogre()
+        enemy_pool.append(enemy)
+        enemy = Troll()
+        enemy_pool.append(enemy)
 
+
+def combat_counter():
+    global enemy_counter
+    if enemy_counter != 0:
+        enemy_counter -= 1
+    elif enemy_counter == 0:
+        if difficulty == "Easy":
+            enemy_counter = 10
+        elif difficulty == "Normal":
+            enemy_counter = 5
+        elif difficulty == "Hard":
+            enemy_counter = 2
+        enemy_encounter()
+
+def enemy_encounter():
+    pass
 
 def take_damage(health, armour, armour_resistance, enemy):
     num = randint(0, 10)
