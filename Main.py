@@ -11,15 +11,6 @@ finished = False
 
 search_map = []
 
-
-premade_map1 = [
-["entrance", "empty_room", "", "", "", ""],
-["corridor", "", "", "", "", ""],
-["tomb", "torture_chamber", "lcorridor", "", "", ""],
-["great_hall", "", "armoury", "corridor", "empty_room", ""],
-["lcorridor", "", "", "", "dining_hall", ""],
-["armoury", "empty_room", "great_hall", "dining_hall", "kitchen", "exit"]]
-
 # entrance = Room("Entrance", 0, 0, 0, 0, 0, "nesw")
 # exit_room = Room("Exit", 0, 0, 0, 0, 0, "nesw")
 
@@ -155,16 +146,17 @@ def start(level, health, armour, armour_resistance, weapon):
         nesw = check_directions()
         print("The available directions are: " + nesw)
         command()
+        get_location(level)
         is_exit()
     
 
 def pre_game():
     global current_room
     generate_search_map()
-    # new_map = create_map()
-    level = premade_map1
+    new_map = create_map()
+    #level = premade_map1
     current_room = level[0][0]
-    # populate_map(new_map)
+    populate_map(new_map)
     get_location(level)
     health = 100
     armour = 0
