@@ -114,7 +114,6 @@ def menu():
 def play(difficulty):
     slow_print("Start")
     slow_print("Difficulty: " + difficulty)
-    slow_print("Setup")
     slow_print("Back")
     choice = input("> ")
     if choice.lower() == "start":
@@ -129,10 +128,6 @@ def play(difficulty):
         else:
             difficulty = "Normal"
         play(difficulty)
-
-    elif choice.lower() == "setup":
-        system("cls")
-        setup()
 
     elif choice.lower() == "back":
         system('cls')
@@ -192,9 +187,6 @@ def pre_game():
     health = 100
     start(level, health, weapon)
 
-def setup():
-    pass
-
 def create_map():
     global level
     level = []
@@ -252,6 +244,12 @@ def command():
     elif command in ["DIRECTIONS", "DIR"]:
         nesw = check_directions()
         print("The available directions are: " + nesw)
+    
+    elif command == "EQUIP":
+        equip()
+    
+    elif command == "INVENTORY":
+        view_inv() 
 
 def move(parameter):
     global y
@@ -283,52 +281,63 @@ def move(parameter):
             get_location(level)
     combat_counter()
     
+def view_inv():
+    system('cls')
+    slow_print("Inventory:")
+    for i in inventory:
+        slow_print(i.name)
+    input("> ")
+
 def search():
+    system('cls')
     global x
     global y
+    num = randint(0, 10)
     if search_map[x][y] == "":
         search_map[x][y] = "S"
+        if level[x][y] == "entrance":
+                inventory.append(iron_broadsword)
+                slow_print("You found an iron broadsword!")
+        if num > 5:    
+            if level[x][y] == "corridor":
+                slow_print("You can't find anything in the corridor")
+            elif level[x][y] in ["kitchen", "empty_room", "dining_hall"]:
+                num = randint(0, len(weapons_list1))
+                if weapons_list1[num] in inventory:
+                    slow_print("You didn't find anything")
+                else:
+                    inventory.append(weapons_list1[num])
+                    slow_print("You found a " + weapons_list1[num].name)
+            elif level[x][y] in ["great_hall", "tomb"]:
+                num = randint(0, len(weapons_list2))
+                if weapons_list2[num] in inventory:
+                    slow_print("You didn't find anything")
+                else:
+                    inventory.append(weapons_list2)
+                    slow_print("You found a " + weapons_list2[num].name)
+            else:
+                num = randint(0, len(weapons_list3))
+                if weapons_list3[num] in inventory:
+                    slow_print("You didn't find anything")
+                else:
+                    inventory.append(weapons_list3[num])
+                    slow_print("You found a " + weapons_list3[num].name)
+            
+    if num <= 5 and level[x][y] != "entrance":
+        slow_print("You didnt find anything")
     else:
         slow_print("I don't think I'll find anything else here")
-    num = randint(0, 10)
-    if num > 5:    
-        if level[x][y] == "entrance":
-            inventory.append(iron_broadsword)
-            slow_print("You found an iron broadsword!")
-        elif level[x][y] == "corridor":
-            slow_print("You can't find anything in the corridor")
-        elif level[x][y] in ["kitchen", "empty_room", "dining_hall"]:
-            num = randint(0, len(weapons_list1))
-            if weapons_list1[num] in inventory:
-                slow_print("You didn't find anything")
-            else:
-                inventory.append(weapons_list1[num])
-                slow_print("You found a " + weapons_list1[num])
-        elif level[x][y] in ["great_hall", "tomb"]:
-            num = randint(0, len(weapons_list2))
-            if weapons_list2[num] in inventory:
-                slow_print("You didn't find anything")
-            else:
-                inventory.append(weapons_list2)
-                slow_print("You found a " + weapons_list2[num])
-        else:
-            num = randint(0, len(weapons_list3))
-            if weapons_list3[num] in inventory:
-                slow_print("You didn't find anything")
-            else:
-                inventory.append(weapons_list3[num])
-                slow_print("You found a " + weapons_list3[num])
-            
-    else:
-        slow_print("You didnt find anything")
+    
+    input("> ")
 
 def observe():
     if current_room == "corridor":
         system('cls')
+        slow_print("Corridor: \n")
         slow_print("You find yourself in a dark wet corridor, there is just enough light from the torches held\non the wall to make it through without tripping")
     elif current_room == "armoury":
-        slow_print("Armoury: \n")
         system('cls')
+        slow_print("Armoury: \n")
         slow_print("You found yourself in an armoury.\nHowever its really old so there isn't much left, maybe you can find a new weapon if you search the room.")
     elif current_room == "kitchen":
         system('cls')
@@ -363,6 +372,19 @@ def observe():
         slow_print("You walk into the cold dining room, its quite dark only lit by candles on the table.")
     else:
         slow_print("This room doesn't seem to have a definition. :(")
+
+def equip():
+    global weapon
+    count = 1
+    system('cls')
+    slow_print("Weapon list")
+    for i in inventory:
+        slow_print(str(count) + ". " + i.name)
+        count += 1
+    slow_print("Please type the number of the weapon you would like to equip or type 0 to go back")
+    choice = int(input("> "))
+    if choice != 0:
+        weapon = inventory[choice - 1]
 
 def check_directions():
     nesw = ""
@@ -432,29 +454,44 @@ def combat_counter():
         elif difficulty == "Hard":
             num = randint(0, 2)
             enemy_counter = num
-        slow_print("You would usually have had an enemy encounter")
-        sleep(1)
+        enemy_encounter()
+        if failed == False:
+            system('cls')
+            slow_print("Sorry, you died :(")
+            sleep(1)
+        else:
+            system('cls')
+            slow_print("You defeated the enemy!")
+            sleep(1)
 
 def enemy_encounter():
     global failed
+    global finished
     global weapon
     global health
     current_enemy = pick_enemy()
+    multiplier = 1
+    material_multiplier = 1
     enemy_turns = 0
     done = False
     while done != True:
         system('cls')
         slow_print("Enemy: " + current_enemy.name)
-        slow_print("Enemy Health: " + current_enemy.health)
-        if enemy_turns == 0:
+        slow_print("Enemy Health: " + str(current_enemy.health))
+        if enemy_turns < 1:
             slow_print("Attack Run")
             combat = input("> ").upper()        
             if combat == "ATTACK":
+                if current_enemy.name == "Troll" or current_enemy.name == "Ogre":
+                    if weapon.material == "Steel":
+                        material_multiplier = 2
+                    else:
+                        material_multiplier = 1
                 num = randint(0, 10)
                 if num < 8:
-                    multiplier = 1
+                    multiplier = 1 * material_multiplier
                 else:
-                    multiplier = 2
+                    multiplier = 2 * material_multiplier
                 current_enemy.health -= weapon.damage * multiplier
                 if current_enemy.health <= 0:
                     done = True
@@ -465,36 +502,17 @@ def enemy_encounter():
                 else:
                     system('cls')
                     slow_print("You falied to run away")
+
             enemy_turns = current_enemy.speed
         else:
+            enemy_turns -= 1
             damage = current_enemy.attack()
             health -= damage
             if health >= 0:
                 pass
             else:
                 done = True
-                failed = True
-
-
-def take_damage(health, armour, armour_resistance, enemy):
-    num = randint(0, 10)
-    if num >= 0 and num <= 7:
-        multiplier = 1
-    else:
-        multiplier = 2
-    health_damage = (enemy.damage * multiplier) / armour_resistance
-    armour_damage = (enemy.damage * multiplier) % armour_resistance
-    health -= health_damage
-    armour.durability -= armour_damage
-    if multiplier == 2:
-        print("Critical hit!")
-    if armour.durability <= 0:
-        armour.durability = 0
-        armour_resistance = 0
-        print("Your", armour.name, "broke!")
-    if health <= 0:
-        death()
-
+                death()
 def is_exit():
     global finished
     if current_room == "exit":
