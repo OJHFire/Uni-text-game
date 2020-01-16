@@ -406,7 +406,7 @@ def check_directions():
 def attack(target, weapon):
     num = randint(0, 10)
     num2 = randint(0, 100)
-    if num >= 0 and num <= 7:
+    if num <= 7:
         multiplier = 1
     else:
         multiplier = 2
