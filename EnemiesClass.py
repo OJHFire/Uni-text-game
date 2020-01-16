@@ -63,6 +63,13 @@ class Imp():
     speed = 2
     damage = 10
     health = 100
+    
+    def attack(self):
+        multiplier = 1
+        num = randint(0, 10)
+        if num > 8:
+            multiplier = 2
+        return self.damage * multiplier
 
 class Succubus():
     
@@ -70,3 +77,10 @@ class Succubus():
     speed = 2
     damage = 5
     health = 50
+    
+    def attack(self):
+        multiplier = 1
+        num = randint(0, 10)
+        if num > 8:
+            multiplier = 2
+        return self.damage * multiplier
